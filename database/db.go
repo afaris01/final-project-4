@@ -4,23 +4,30 @@ import (
 	"final-project-4/models"
 	"fmt"
 	"log"
+	"os"
 
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-var (
-	host     = "localhost"
-	user     = "root"
-	password = ""
-	dbPort   = "443"
-	dbName   = "toko-belanja"
-	err      error
-)
+// var (
+// 	host     = "localhost"
+// 	user     = "root"
+// 	password = ""
+// 	dbPort   = "443"
+// 	dbName   = "toko-belanja"
+// 	err      error
+// )
 
 func MulaiDB() *gorm.DB{
-	dsn := "root@tcp(127.0.0.1:3306)/toko-belanja?charset=utf8mb4&parseTime=True&loc=Local"
-	database, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	host := os.Getenv("DB_HOST")
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
+
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", host, user, password, dbName, dbPort)
+	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Gagal menyambung ke database :", err)
 	}
